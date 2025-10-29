@@ -1,7 +1,13 @@
 {
   "name": "bfpmodels",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "main": "models/index.js",
+  "exports": {
+    ".": "./models/index.js",
+    "./models": "./models/index.js",
+    "./models/index.js": "./models/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -9,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3"
   }
