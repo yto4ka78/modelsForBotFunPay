@@ -1,5 +1,5 @@
-import { Model, DataTypes } from "sequelize";
-export default (sequelize) => {
+import { Model } from "sequelize";
+export default (sequelize, DataTypes) => {
   class Pool extends Model {
     static associate(models) {
       this.belongsTo(models.User, {

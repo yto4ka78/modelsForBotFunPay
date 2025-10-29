@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
-import { DataTypes, Model } from "sequelize";
+import { Model } from "sequelize";
 
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   class User extends Model {
     async validPassword(password) {
       return bcrypt.compare(password, this.password);

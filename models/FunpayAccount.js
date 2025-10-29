@@ -1,7 +1,7 @@
-import { DataTypes, Model } from "sequelize";
+import { Model } from "sequelize";
 import { encryptGCM, decryptGCM, isGcmEnvelope } from "../middleware/crypto.js";
 
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   class FunpayAccount extends Model {
     static associate(models) {
       this.belongsTo(models.User, {

@@ -27,10 +27,30 @@ export async function initModels(sequelize) {
   for (const file of files) {
     const modelPath = path.join(__dirname, file);
     const modelUrl = pathToFileURL(modelPath).href;
-    const modelModule = await import(modelUrl);
-    const modelFactory = modelModule.default;
-    const model = modelFactory(sequelize, Sequelize.DataTypes);
-    initializedDb[model.name] = model;
+    try {
+      const modelModule = await import(modelUrl);
+      const modelFactory = modelModule.default;
+
+      if (typeof modelFactory !== "function") {
+        throw new Error(
+          `Model ${file} does not export a default function. ` +
+            `Received: ${typeof modelFactory}. ` +
+            `Module keys: ${Object.keys(modelModule).join(", ")}`
+        );
+      }
+
+      const model = modelFactory(sequelize, Sequelize.DataTypes);
+      if (!model || !model.name) {
+        throw new Error(
+          `Model ${file} factory did not return a valid Sequelize model`
+        );
+      }
+
+      initializedDb[model.name] = model;
+    } catch (error) {
+      console.error(`Error loading model ${file}:`, error.message);
+      throw error;
+    }
   }
 
   Object.keys(initializedDb).forEach((modelName) => {

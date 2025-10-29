@@ -1,7 +1,7 @@
-import { Model, DataTypes } from "sequelize";
+import { Model } from "sequelize";
 import { decryptGCM } from "../middleware/crypto.js";
 
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   class SteamAccount extends Model {
     static associate(models) {
       this.belongsTo(models.User, {

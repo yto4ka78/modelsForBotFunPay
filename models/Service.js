@@ -1,6 +1,6 @@
-import { Model, DataTypes } from "sequelize";
+import { Model } from "sequelize";
 
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   class Service extends Model {
     static associate(models) {
       this.belongsTo(models.Pool, {
