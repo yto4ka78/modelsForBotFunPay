@@ -1,15 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { pathToFileURL } from "url";
 import Sequelize from "sequelize";
-import { createRequire } from "module";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const basename = path.basename(__filename);
-const require = createRequire(import.meta.url);
 
-export function initModels(sequelize) {
+export async function initModels(sequelize) {
   if (!sequelize) {
     throw new Error("Sequelize instance is required");
   }
@@ -25,11 +24,14 @@ export function initModels(sequelize) {
     );
   });
 
-  files.forEach((file) => {
+  for (const file of files) {
     const modelPath = path.join(__dirname, file);
-    const model = require(modelPath)(sequelize, Sequelize.DataTypes);
+    const modelUrl = pathToFileURL(modelPath).href;
+    const modelModule = await import(modelUrl);
+    const modelFactory = modelModule.default;
+    const model = modelFactory(sequelize, Sequelize.DataTypes);
     initializedDb[model.name] = model;
-  });
+  }
 
   Object.keys(initializedDb).forEach((modelName) => {
     if (initializedDb[modelName].associate) {
